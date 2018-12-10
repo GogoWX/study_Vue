@@ -6,18 +6,103 @@
     <title>Vue Test</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="node_modules/vue/dist/vue.js"></script>
+    <style>
+        .a{
+            list-style: none;
+            background-color: #6b76ff;
+        }
+        .b{
+            list-style: none;
+            background-color: #a5aeff;
+        }
+        .c{
+            list-style: none;
+            background-color: #c8e4fe;
+        }
+    </style>
 </head>
 <body>
     <div id="app"></div>
+    <div id="command"></div>
+    <div id="bilateral"></div>
+    <div id="list"></div>
     <script>
+        // 插值表达式
         new Vue({
             el: '#app',
-            template: '<div><h1>好好学习，{{text}}</h1></div>',
+            //只能有一个根节点
+            template: `
+                <div>
+                    <h1>好好学习，{{text}}</h1>
+                    <hr/>
+                </div>
+            `,
             data: function() {
                 return {
                     text: '天天向上'
                 }
             }
+        })
+        // 指令演示
+        new Vue({
+            el: '#command',
+            template: `
+                <div>
+                    <!--单项数据绑定，从vue到dom-->
+                    <input type="text" v-bind:value="myValue"/>
+                    <button v-on:click="myValue = 'Ethan' ">点我改变value值</button>
+                    <hr/>
+                </div>
+            `,
+            data: function() {
+                return {
+                    myValue: 'my name is?'
+                }
+            }
+        })
+        // v-model双向数据绑定
+        new Vue({
+            el: '#bilateral',
+            template: `
+                <div>
+                    <!--单项数据绑定，从vue到dom-->
+                    <input type="text" v-model="myQuestion"/>
+                    <button v-if="myQuestion == myPassWord">允许访问</button>
+                    <hr/>
+                </div>
+            `,
+            data: function() {
+                return {
+                    myQuestion: 'my name is?',
+                    myPassWord: 'Ethan'
+                }
+            }
+        })
+        //v-for 列表渲染
+        new Vue({
+            el: '#list',
+            template: `
+                <div>
+                    <ul>
+                        <li v-for="item in nameList" :class="item.score" v-if="isShow">{{item.name}}</li>
+                    </ul>
+                    <button @click="changeIsShow">改变列表状态</button>
+                    <hr/>
+                </div>
+            `,
+            data: function() {
+                return {
+                    isShow: true,
+                    nameList: [{name: '张三',score: 'a'},{name: '李四',score: 'b'},{name: '王五',score: 'c'}] 
+                }
+            },
+            methods: {
+                // vue帮我们处理了this指向，不再是事件的对象
+                changeIsShow:function() {
+                    this.isShow = !this.isShow;
+                }
+            }
+
         })
     </script>
 </body>
