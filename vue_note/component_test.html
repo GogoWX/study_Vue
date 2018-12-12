@@ -13,6 +13,10 @@
 <body>
     <div id='app'></div>
     <div id="privacy"></div>
+    <div id="communication"></div>
+    <div id='my_filter'></div>
+    <div id="watch"></div>
+    <div id="computed"></div>
     <script>
         // 全局注册组件
         Vue.component("publish-component", {
@@ -44,6 +48,146 @@
                 'privacy-component': Temp
             },
             template: `<privacy-component></privacy-component>`,
+        })
+        // 组件间的通信：
+
+        // 父向子传递数据
+        var Son = {
+            props: ['title'],
+            template: `
+                <h1>我的名字叫{{title}}</h1>
+            `
+        }
+        var Father = {
+            components: {
+                son: Son
+            },
+            template: `
+                <div>
+                    <son :title = "name"></son>
+                    <hr/>
+                </div>
+            `,
+            data: function() {
+                return {
+                    name: "Ethan"
+                }
+            }
+        }
+        new Vue({
+            el: '#communication',
+            components: {
+                father: Father 
+            },
+            template: `<father/>`
+        })
+        //过滤器
+
+        //组件内过滤器
+        var myFilter = {
+            template: `
+                <div>
+                    <input type='text' v-model="myText" />
+                    {{ myText | reverse('En') }}
+                    <hr/>
+                </div>
+            `,
+            data: function() {
+                return { myText: ''}
+            },
+            //组件内的过滤器
+            filters: {
+                reverse: function(dataStr,lang) {//参数1为原数据,以后为reverse参数
+                    return lang + ':' + dataStr.split('').reverse().join('');
+                }
+            }
+        }
+        new Vue({
+            el: '#my_filter',
+            components: {
+                myfilter: myFilter
+            },
+            template: `<myfilter />`
+        })
+        //监听改动
+
+        //watch
+        var Watch = {
+            template: `
+                <div>
+                    <input type="text" v-model="myText" />
+                    {{myText}}
+                    <hr/>
+                    <input type="text" v-model="stus[0].name" />
+                    <button @click="stus[0].name='Ethan';">改变stus[0].name属性</button>
+                    <hr/>
+                </div>
+            `,
+            data: function() {
+                return {
+                    myText: 'wx',
+                    stus: [{name: 'wx'}]
+                }
+            },
+            watch: {
+                //key为要监视的data属性名，val为监视后的行为
+                myText: function(newV,oldV) {//监视基础数据类型
+                    console.log('新的属性值：',newV,'旧的属性值：',oldV)
+                    if(newV === 'Ethan') {
+                        alert('yep,that\'s me too!')
+                    }
+                },
+                // 监视复杂数据类型(深度监视)
+                stus: {
+                    deep: true,
+                    handler: function(newV) {
+                        alert('深度监视成功!')
+                    }
+                }
+
+            }
+        }
+        new Vue({
+            el: '#watch',
+            components: {
+                watch: Watch
+            },
+            template: `<watch />`
+        })
+
+        // computed计算属性(监视多个属性)
+
+        var Computed = {
+            template: `
+                <div>
+                    （<input type="text" v-model="n1" />+
+                    <input type="text" v-model="n2" />）*
+                    <input type="text" v-model="rate" /> = {{ result }}
+                    <hr/>
+                </div>
+            `,
+            data: function() {
+                return {
+                    n1: 0,
+                    n2: 0,
+                    rate: 0
+                }
+            },
+            computed: {
+                //包含原值不变，缓存不调函数的优化机制
+                result: function() {
+                    //监视对象写在了函数内部，凡是函数内部有'this.'相关属性改变都会出发当前函数。
+                    return ((this.n1-0) + (this.n2-0)) * this.rate;
+                }
+            }
+        }
+
+        new Vue({
+            el: '#computed',
+            components: {
+                computed: Computed
+            },
+            template: `<computed />`
         })
     </script>
 </body>
