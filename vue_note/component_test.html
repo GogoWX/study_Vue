@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>compmemt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
+    <script src="../vue_note/node_modules/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id='app'></div>
+    <div id="privacy"></div>
+    <script>
+        // 全局注册组件
+        Vue.component("publish-component", {
+            template: `
+                <section>
+                    <h1>我是公共组件</h1>
+                    <hr>
+                </section>
+            `,
+        });
+        new Vue({
+            el: '#app',
+            components: {},
+            template: `<publish-component></publish-component>`, //可直接使用，不用再在components中注册
+        })
+        //局部注册组件
+        //var Temp = Vue.extend ({}); 创建组件
+        var Temp = {
+            template: `
+                <section>
+                    <h1>我是局部组件</h1>
+                    <hr>
+                </section>
+            `,
+        };
+        new Vue({
+            el: '#privacy',
+            components: {
+                'privacy-component': Temp
+            },
+            template: `<privacy-component></privacy-component>`,
+        })
+    </script>
+</body>
+
+</html>
