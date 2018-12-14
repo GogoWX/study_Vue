@@ -20,12 +20,12 @@
                 }
             },
             beforeCreate: function() {
-                // 创建之前
-                console.log('创建之前data中的数据：',this.text)
+                // 组件创建之前
+                console.log('组件创建之前data中的数据：',this.text)
             },
             created: function() {
-                //创建之后
-                console.log('创建之后data中的数据：',this.text)
+                //组件创建之后
+                console.log('组件创建之后data中的数据：',this.text)
             }
         }
 ```
