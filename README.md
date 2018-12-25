@@ -1,2 +1,2 @@
 # study_WX
-### [Vue](vue_note/readme.md)
+### [Vue](\vue_note\README.md)
